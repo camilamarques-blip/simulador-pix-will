@@ -62,7 +62,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 taxa: taxaString
             };
             recommendation = "Pix Parcelado";
-            detail = `Divide o valor em até 12x sem travar o limite do seu cartão. Bora agilizar seus planos!`; [cite: 606]
+            detail = `Divide o valor em até 12x sem travar o limite do seu cartão. Bora agilizar seus planos!`;
         }
 
         if (flow === "credito") {
@@ -76,7 +76,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 taxa: taxaString
             };
             recommendation = "Pix no Crédito";
-            detail = `Use o limite do seu cartão e paga tudo na fatura. Sem tempo ruim.`; [cite: 641]
+            detail = `Use o limite do seu cartão e paga tudo na fatura. Sem tempo ruim.`;
         }
 
         if (flow === "paga-depois") {
