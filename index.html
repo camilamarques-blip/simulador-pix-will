@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulador de Pix | will bank</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Roboto+Slab:wght@700&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <main class="simulator-card">
+        
+        <div id="step-1" class="step-page active">
+            <div class="step-content">
+                <h2>qual o Pix que é a sua cara?</h2>
+                <p>Responde rapidinho e a gente mostra o melhor caminho ✨</p>
+                <label for="input-amount" class="will-label">1️⃣ Quanto você quer mandar via Pix?</label>
+                <input type="number" id="input-amount" class="will-input" placeholder="Ex: 1000">
+                <button id="btn-step-1" class="will-button" disabled>Partiu</button>
+            </div>
+        </div>
+
+        <div id="step-2" class="step-page">
+            <div class="step-content button-stack">
+                <label class="will-label">2️⃣ E o saldo, como tá hoje?</label>
+                <button id="btn-flow-vista" class="will-button secondary">
+                    Tenho dindim, bora pagar agora [cite: 602]
+                </button>
+                <button id="btn-step-3" class="will-button secondary">
+                    Quero ver outras formas de pagar
+                </button>
+            </div>
+        </div>
+
+        <div id="step-3" class="step-page">
+            <div class="step-content button-stack">
+                <label class="will-label">3️⃣ Como você prefere se organizar?</label>
+                <button id="btn-goto-step-4" class="will-button secondary">
+                    Parcelar no tempo certo
+                </button>
+                <button id="btn-flow-credito" class="will-button secondary">
+                    Mandar tudo na próxima fatura [cite: 641]
+                </button>
+                <button id="btn-goto-step-5" class="will-button secondary">
+                    Pagar de uma vez, mas só mais pra frente
+                </button>
+            </div>
+        </div>
+
+        <div id="step-4" class="step-page">
+            <div class="step-content">
+                <label for="input-installments" class="will-label">Quantas parcelas cabem aí no seu bolso?</label>
+                <input type="number" id="input-installments" class="will-input" min="2" max="12" value="6">
+                <button id="btn-flow-parcelado" class="will-button">
+                    Simular Pix Parcelado
+                </button>
+            </div>
+        </div>
+
+        <div id="step-5" class="step-page">
+            <div class="step-content button-stack">
+                <label class="will-label">Pra quando você quer jogar esse pagamento?</label>
+                <button id="btn-flow-paga-depois-30" class="will-button secondary">
+                    Próxima fatura (~30 dias)
+                </button>
+                <button id="btn-flow-paga-depois-60" class="will-button secondary">
+                    Fatura seguinte (~60 dias)
+                </button>
+            </div>
+        </div>
+
+        <div id="step-result" class="step-page">
+            <div class="step-content">
+                <h2 id="result-title"></h2>
+                <p id="result-detail"></p>
+                <ul class="result-list">
+                    <li><strong>Parcelas:</strong> <span id="result-parcelas"></span></li>
+                    <li><strong>Valor da parcela:</strong> <span id="result-valor-parcela"></span></li>
+                    <li><strong>Começa a pagar:</strong> <span id="result-comeco-pagamento"></span></li>
+                    <li><strong>Taxa estimada:</strong> <span id="result-taxa"></span></li>
+                </ul>
+                <button id="btn-restart" class="will-button">
+                    Simular outro Pix
+                </button>
+            </div>
+        </div>
+
+    </main>
+
+    <script src="script.js"></script>
+</body>
+</html>
