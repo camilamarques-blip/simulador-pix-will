@@ -157,7 +157,6 @@ p {
     color: var(--will-black);
 }
 
-/* NOVO ESTILO */
 .result-list li.total-pago-item {
     font-size: 1.1rem;
     font-weight: 700;
@@ -167,7 +166,6 @@ p {
     color: var(--will-black);
 }
 
-/* NOVO ESTILO */
 .result-comparison {
     display: none; /* Escondido por padrão */
     background-color: var(--will-gray-light);
@@ -180,4 +178,13 @@ p {
     margin: 0;
     font-size: 0.95rem;
     line-height: 1.5;
+}
+
+/* NOVO ESTILO (única mudança) */
+.result-comparison p small {
+    display: block;
+    font-weight: 400;
+    color: var(--will-gray-dark);
+    font-size: 0.9em;
+    margin-top: 4px;
 }
