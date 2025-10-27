@@ -19,7 +19,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const formatDate = (date) => {
         const d = new Date(date);
-        // Adiciona o fuso horário para corrigir a data
         const userTimezoneOffset = d.getTimezoneOffset() * 60000;
         const dCorrigida = new Date(d.getTime() + userTimezoneOffset);
         
@@ -41,7 +40,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const taxaMensal = 0.0499;
         const taxaString = `${(taxaMensal * 100).toFixed(2)}% a.m. + IOF`;
 
-        // Lógica de Comparativo
+        // --- Lógica de Comparativo (Novas funções) ---
         const calcularTotalCredito = (valorBase) => {
             const juros = valorBase * taxaMensal;
             const iof = calculateIOF(valorBase, 30);
@@ -49,11 +48,20 @@ document.addEventListener('DOMContentLoaded', () => {
         };
 
         const calcularTotalParcelado = (valorBase, numParcelas) => {
-            const iof = calculateIOF(valorBase, 45 * numParcelas); // Simplificação do IOF
+            const iof = calculateIOF(valorBase, 45 * numParcelas); // Simplificação
             const valorComIOF = valorBase + iof;
             const parcela = (valorComIOF * taxaMensal) / (1 - Math.pow(1 + taxaMensal, -numParcelas));
             return parcela * numParcelas;
         };
+
+        const calcularTotalPagaDepois = (valorBase, diasDelay) => {
+            const meses = diasDelay / 30;
+            const valorComposto = valorBase * Math.pow(1 + taxaMensal, meses);
+            const iof = calculateIOF(valorBase, diasDelay);
+            return valorComposto + iof;
+        };
+        // --- Fim da Lógica de Comparativo ---
+
 
         if (flow === "vista") {
             recommendation = "Pix na Conta";
@@ -75,8 +83,8 @@ document.addEventListener('DOMContentLoaded', () => {
             const parcela = (valorComIOF * taxaMensal) / (1 - Math.pow(1 + taxaMensal, -installments));
             const totalPago = parcela * installments;
             
-            // Comparativo
-            const totalCredito = calcularTotalCredito(valor);
+            const diasDelay = 30;
+            const totalPagaDepois = calcularTotalPagaDepois(valor, diasDelay);
             
             simulation = {
                 valorOriginal: valor.toFixed(2),
@@ -86,8 +94,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 taxa: taxaString,
                 valorTotalPago: totalPago.toFixed(2),
                 comparison: {
-                    tipo: "Pix no Crédito",
-                    valorTotal: totalCredito.toFixed(2)
+                    tipo: `Pix Paga Depois (~${diasDelay} dias)`,
+                    valorTotal: totalPagaDepois.toFixed(2),
+                    detalhe: null
                 }
             };
             recommendation = "Pix Parcelado";
@@ -97,7 +106,6 @@ document.addEventListener('DOMContentLoaded', () => {
         if (flow === "credito") {
             const totalPago = calcularTotalCredito(valor);
             
-            // Comparativo (usando 6 parcelas como padrão)
             const defaultInstallments = 6;
             const totalParcelado = calcularTotalParcelado(valor, defaultInstallments);
 
@@ -110,7 +118,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 valorTotalPago: totalPago.toFixed(2),
                 comparison: {
                     tipo: `Pix Parcelado (em ${defaultInstallments}x)`,
-                    valorTotal: totalParcelado.toFixed(2)
+                    valorTotal: totalParcelado.toFixed(2),
+                    detalhe: null
                 }
             };
             recommendation = "Pix no Crédito";
@@ -119,11 +128,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (flow === "paga-depois") {
             const diasDelay = parseInt(faturaDelay);
-            const meses = diasDelay / 30;
-            const valorComposto = valor * Math.pow(1 + taxaMensal, meses);
-            const iof = calculateIOF(valor, diasDelay);
-            const totalPago = valorComposto + iof;
+            const totalPago = calcularTotalPagaDepois(valor, diasDelay);
             
+            const defaultInstallments = 6;
+            const totalParcelado = calcularTotalParcelado(valor, defaultInstallments);
+
             simulation = {
                 valorOriginal: valor.toFixed(2),
                 parcelas: 1,
@@ -131,7 +140,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 comecoPagamento: `Daqui a ${diasDelay} dias`,
                 taxa: taxaString,
                 valorTotalPago: totalPago.toFixed(2),
-                comparison: null // Sem comparativo para este
+                comparison: {
+                    tipo: `Pix Parcelado (em ${defaultInstallments}x)`,
+                    valorTotal: totalParcelado.toFixed(2),
+                    detalhe: "Não usa limite do cartão e começa a pagar daqui a 45 dias."
+                }
             };
             recommendation = "Pix Paga Depois";
             detail = `Respira fundo e paga mais pra frente, com o limite do cartão. O will segura essa.`;
@@ -154,11 +167,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const displayResult = () => {
         if (!result) return;
         
-        // Esconde campos que não fazem sentido
         $('#li-valor-original').style.display = (flow === 'vista' ? 'none' : 'flex');
         $('#li-valor-total-pago').style.display = (flow === 'vista' ? 'none' : 'flex');
 
-        // Preenche os dados
         $('#result-title').innerHTML = `🎯 Pix ideal pra você: <strong>${result.recommendation}</strong>`;
         $('#result-detail').innerText = result.detail;
         $('#result-valor-original').innerText = `R$ ${result.valorOriginal}`;
@@ -168,12 +179,17 @@ document.addEventListener('DOMContentLoaded', () => {
         $('#result-taxa').innerText = result.taxa;
         $('#result-valor-total-pago').innerText = `R$ ${result.valorTotalPago}`;
         
-        // Preenche o comparativo
         const comparisonBox = $('#result-comparison-box');
         const comparisonText = $('#comparison-text');
         
         if (result.comparison) {
-            comparisonText.innerHTML = `No <strong>${result.comparison.tipo}</strong>, o valor total seria <strong>R$ ${result.comparison.valorTotal}</strong>.`;
+            let compText = `No <strong>${result.comparison.tipo}</strong>, o valor total seria <strong>R$ ${result.comparison.valorTotal}</strong>.`;
+            
+            if (result.comparison.detalhe) {
+                compText += `<small>${result.comparison.detalhe}</small>`;
+            }
+            
+            comparisonText.innerHTML = compText;
             comparisonBox.style.display = 'block';
         } else {
             comparisonBox.style.display = 'none';
