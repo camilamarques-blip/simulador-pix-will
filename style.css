@@ -1,7 +1,7 @@
 /* --- Importação de Fontes (Google Fonts) --- */
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Roboto+Slab:wght@700&display=swap');
 
-/* --- Variáveis de Cor (Baseado no Brandbook will) [cite: 1083, 1114, 1130] --- */
+/* --- Variáveis de Cor (Baseado no Brandbook will) --- */
 :root {
     --will-yellow: #ffd900;
     --will-black: #1d1e1b;
@@ -13,7 +13,7 @@
 
 /* --- Estilos Globais --- */
 body {
-    /* Emula Will Sans (funcional) [cite: 1362, 1394] */
+    /* Emula Will Sans (funcional) */
     font-family: 'Inter', sans-serif;
     background-color: var(--will-gray-light);
     color: var(--will-gray-dark);
@@ -28,7 +28,7 @@ body {
 /* --- Card Principal (Tradução do <Card>) --- */
 .simulator-card {
     background-color: var(--will-white);
-    border-radius: 12px; /* "Levemente arredondados" [cite: 1902] */
+    border-radius: 12px; /* "Levemente arredondados" */
     box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
     width: 100%;
     max-width: 500px; /* Ajustado para melhor visualização */
@@ -57,9 +57,9 @@ body {
     to { opacity: 1; transform: translateY(0); }
 }
 
-/* --- Tipografia (Baseado no Brandbook) [cite: 1388, 1394] --- */
+/* --- Tipografia (Baseado no Brandbook) --- */
 h2 {
-    /* Emula Will Slab/Display (expressiva, confiável) [cite: 1297, 1329] */
+    /* Emula Will Slab/Display (expressiva, confiável) */
     font-family: 'Roboto Slab', serif;
     color: var(--will-black);
     font-size: 1.5rem;
@@ -88,7 +88,7 @@ p {
     font-weight: 600;
     padding: 12px;
     border: 2px solid var(--will-gray-medium);
-    border-radius: 8px; /* "Levemente arredondados" [cite: 1902] */
+    border-radius: 8px; /* "Levemente arredondados" */
     box-sizing: border-box;
     width: 100%;
     transition: border-color 0.3s, box-shadow 0.3s;
