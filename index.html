@@ -17,7 +17,7 @@
         
         <div id="step-1" class="step-page active">
             <div class="step-content">
-                <h2>Qual o melhor Pix pro seu momento?</h2>
+                <h2>qual o Pix que é a sua cara?</h2>
                 <p>Responde rapidinho e a gente mostra o melhor caminho ✨</p>
                 <label for="input-amount" class="will-label">1️⃣ Quanto você quer mandar via Pix?</label>
                 <input type="number" id="input-amount" class="will-input" placeholder="Ex: 1000">
@@ -79,11 +79,36 @@
                 <h2 id="result-title"></h2>
                 <p id="result-detail"></p>
                 <ul class="result-list">
-                    <li><strong>Parcelas:</strong> <span id="result-parcelas"></span></li>
-                    <li><strong>Valor da parcela:</strong> <span id="result-valor-parcela"></span></li>
-                    <li><strong>Começa a pagar:</strong> <span id="result-comeco-pagamento"></span></li>
-                    <li><strong>Taxa estimada:</strong> <span id="result-taxa"></span></li>
+                    <li id="li-valor-original">
+                        <strong>Valor do Pix:</strong> 
+                        <span id="result-valor-original"></span>
+                    </li>
+                    <li>
+                        <strong>Parcelas:</strong> 
+                        <span id="result-parcelas"></span>
+                    </li>
+                    <li>
+                        <strong>Valor da parcela:</strong> 
+                        <span id="result-valor-parcela"></span>
+                    </li>
+                    <li>
+                        <strong>Começa a pagar:</strong> 
+                        <span id="result-comeco-pagamento"></span>
+                    </li>
+                    <li>
+                        <strong>Taxa estimada:</strong> 
+                        <span id="result-taxa"></span>
+                    </li>
+                    <li id="li-valor-total-pago" class="total-pago-item">
+                        <strong>Valor Total Pago:</strong> 
+                        <span id="result-valor-total-pago"></span>
+                    </li>
                 </ul>
+                
+                <div class="result-comparison" id="result-comparison-box">
+                    <p id="comparison-text"></p>
+                </div>
+
                 <button id="btn-restart" class="will-button">
                     Simular outro Pix
                 </button>
