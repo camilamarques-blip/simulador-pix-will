@@ -1,269 +1,188 @@
-// Aguarda o HTML carregar
-document.addEventListener('DOMContentLoaded', () => {
+/* --- Importação de Fontes (Google Fonts) --- */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Roboto+Slab:wght@700&display=swap');
 
-    // --- Seletores de Elementos ---
-    const $ = (selector) => document.querySelector(selector);
-    
-    // --- Variáveis de Estado ---
-    let flow = "";
-    let amount = "";
-    let installments = 6;
-    let faturaDelay = "30";
-    let result = null;
+/* --- Variáveis de Cor (Baseado no Brandbook will) --- */
+:root {
+    --will-yellow: #ffd900;
+    --will-black: #1d1e1b;
+    --will-white: #ffffff;
+    --will-gray-light: #ebebeb;
+    --will-gray-dark: #40393e;
+    --will-gray-medium: #ccc1b8;
+}
 
-    // --- Funções Auxiliares ---
-    
-    const calculateIOF = (value, dias) => {
-        return value * 0.0038 + value * 0.000082 * dias;
-    };
+/* --- Estilos Globais --- */
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: var(--will-gray-light);
+    color: var(--will-gray-dark);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 20px;
+    box-sizing: border-box;
+}
 
-    const formatDate = (date) => {
-        const d = new Date(date);
-        const userTimezoneOffset = d.getTimezoneOffset() * 60000;
-        const dCorrigida = new Date(d.getTime() + userTimezoneOffset);
-        
-        const day = String(dCorrigida.getDate()).padStart(2, '0');
-        const month = String(dCorrigida.getMonth() + 1).padStart(2, '0');
-        const year = dCorrigida.getFullYear();
-        return `${day}/${month}/${year}`;
-    };
+/* --- Card Principal --- */
+.simulator-card {
+    background-color: var(--will-white);
+    border-radius: 12px;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+    width: 100%;
+    max-width: 500px;
+    padding: 1.5rem;
+    overflow: hidden;
+}
 
-    // --- Função Principal: Simular ---
-    const simulate = () => {
-        const valor = parseFloat(amount);
-        if (!valor || isNaN(valor)) return;
+/* --- Conteúdo da Etapa --- */
+.step-content {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    text-align: left;
+}
 
-        let recommendation = "";
-        let detail = "";
-        let simulation = {};
-        
-        const taxaMensal = 0.0499;
-        const taxaString = `${(taxaMensal * 100).toFixed(2)}% a.m. + IOF`;
+/* --- Navegação das Etapas --- */
+.step-page {
+    display: none;
+    animation: fadeIn 0.4s ease-in-out;
+}
+.step-page.active {
+    display: block;
+}
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
 
-        // --- Lógica de Comparativo (Novas funções) ---
-        const calcularTotalCredito = (valorBase) => {
-            const juros = valorBase * taxaMensal;
-            const iof = calculateIOF(valorBase, 30);
-            return valorBase + juros + iof;
-        };
+/* --- Tipografia --- */
+h2 {
+    font-family: 'Roboto Slab', serif;
+    color: var(--will-black);
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin: 0;
+    text-align: center;
+}
+p {
+    font-size: 1rem;
+    color: var(--will-gray-dark);
+    line-height: 1.5;
+    margin: 0 0 0.5rem 0;
+    text-align: center;
+}
 
-        const calcularTotalParcelado = (valorBase, numParcelas) => {
-            const iof = calculateIOF(valorBase, 45 * numParcelas); // Simplificação
-            const valorComIOF = valorBase + iof;
-            const parcela = (valorComIOF * taxaMensal) / (1 - Math.pow(1 + taxaMensal, -numParcelas));
-            return parcela * numParcelas;
-        };
+/* --- Elementos de Formulário --- */
+.will-label {
+    font-family: 'Roboto Slab', serif;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--will-black);
+}
+.will-input {
+    font-family: 'Inter', sans-serif;
+    font-size: 1.2rem;
+    font-weight: 600;
+    padding: 12px;
+    border: 2px solid var(--will-gray-medium);
+    border-radius: 8px;
+    box-sizing: border-box;
+    width: 100%;
+    transition: border-color 0.3s, box-shadow 0.3s;
+}
+.will-input:focus {
+    border-color: var(--will-yellow);
+    box-shadow: 0 0 8px rgba(255, 217, 0, 0.3);
+    outline: none;
+}
 
-        const calcularTotalPagaDepois = (valorBase, diasDelay) => {
-            const meses = diasDelay / 30;
-            const valorComposto = valorBase * Math.pow(1 + taxaMensal, meses);
-            const iof = calculateIOF(valorBase, diasDelay);
-            return valorComposto + iof;
-        };
-        // --- Fim da Lógica de Comparativo ---
+/* --- Botões --- */
+.will-button {
+    font-family: 'Inter', sans-serif;
+    font-size: 1rem;
+    font-weight: 700;
+    padding: 14px 20px;
+    border: 2px solid var(--will-yellow);
+    border-radius: 8px;
+    cursor: pointer;
+    background-color: var(--will-yellow);
+    color: var(--will-black);
+    transition: background-color 0.3s, transform 0.2s, border-color 0.3s;
+    width: 100%;
+    box-sizing: border-box;
+}
+.will-button:hover {
+    background-color: #e6c300;
+    border-color: #e6c300;
+    transform: translateY(-2px);
+}
+.will-button:disabled {
+    background-color: var(--will-gray-light);
+    border-color: var(--will-gray-light);
+    color: var(--will-gray-medium);
+    cursor: not-allowed;
+    transform: none;
+}
+.will-button.secondary {
+    background-color: var(--will-white);
+    color: var(--will-black);
+    border: 2px solid var(--will-gray-medium);
+}
+.will-button.secondary:hover {
+    background-color: #f9f9f9;
+    border-color: var(--will-yellow);
+    transform: translateY(-2px);
+}
+.button-stack {
+    gap: 0.75rem;
+}
 
+/* --- Página de Resultado --- */
+.result-list {
+    list-style: none;
+    padding: 0;
+    margin: 0.5rem 0;
+    border-top: 2px solid var(--will-gray-light);
+}
+.result-list li {
+    font-size: 1rem;
+    padding: 0.75rem 0.25rem;
+    display: flex;
+    justify-content: space-between;
+    border-bottom: 1px dashed var(--will-gray-medium);
+}
+.result-list li strong {
+    font-weight: 600;
+    color: var(--will-black);
+}
 
-        if (flow === "vista") {
-            recommendation = "Pix na Conta";
-            simulation = {
-                valorOriginal: valor.toFixed(2),
-                parcelas: 1,
-                valorParcela: valor.toFixed(2),
-                comecoPagamento: "Hoje",
-                taxa: "0%",
-                valorTotalPago: valor.toFixed(2),
-                comparison: null
-            };
-            detail = "Pagamento direto com saldo em conta. Sem taxa, sem enrolação. Pronto, tá resolvido!";
-        }
+.result-list li.total-pago-item {
+    font-size: 1.1rem;
+    font-weight: 700;
+    border-bottom: 2px solid var(--will-gray-light);
+}
+.result-list li.total-pago-item span {
+    color: var(--will-black);
+}
 
-        if (flow === "parcelado") {
-            const iof = calculateIOF(valor, 45 * installments);
-            const valorComIOF = valor + iof;
-            const parcela = (valorComIOF * taxaMensal) / (1 - Math.pow(1 + taxaMensal, -installments));
-            const totalPago = parcela * installments;
-            
-            // NOVO COMPARATIVO: Parcelado vs Paga Depois (30 dias)
-            const diasDelay = 30;
-            const totalPagaDepois = calcularTotalPagaDepois(valor, diasDelay);
-            
-            simulation = {
-                valorOriginal: valor.toFixed(2),
-                parcelas: installments,
-                valorParcela: parcela.toFixed(2),
-                comecoPagamento: formatDate(new Date(Date.now() + 45 * 86400000)),
-                taxa: taxaString,
-                valorTotalPago: totalPago.toFixed(2),
-                comparison: {
-                    tipo: `Pix Paga Depois (~${diasDelay} dias)`,
-                    valorTotal: totalPagaDepois.toFixed(2),
-                    detalhe: null // Sem detalhe extra aqui
-                }
-            };
-            recommendation = "Pix Parcelado";
-            detail = `Divide o valor em até 12x sem travar o limite do seu cartão. Bora agilizar seus planos!`;
-        }
-
-        if (flow === "credito") {
-            const totalPago = calcularTotalCredito(valor);
-            
-            // Comparativo (Mantido): Crédito vs Parcelado (6x)
-            const defaultInstallments = 6;
-            const totalParcelado = calcularTotalParcelado(valor, defaultInstallments);
-
-            simulation = {
-                valorOriginal: valor.toFixed(2),
-                parcelas: 1,
-                valorParcela: totalPago.toFixed(2),
-                comecoPagamento: "Fatura atual",
-                taxa: taxaString,
-                valorTotalPago: totalPago.toFixed(2),
-                comparison: {
-                    tipo: `Pix Parcelado (em ${defaultInstallments}x)`,
-                    valorTotal: totalParcelado.toFixed(2),
-                    detalhe: null
-                }
-            };
-            recommendation = "Pix no Crédito";
-            detail = `Use o limite do seu cartão e paga tudo na fatura. Sem tempo ruim.`;
-        }
-
-        if (flow === "paga-depois") {
-            const diasDelay = parseInt(faturaDelay);
-            const totalPago = calcularTotalPagaDepois(valor, diasDelay);
-            
-            // NOVO COMPARATIVO: Paga Depois vs Parcelado (6x)
-            const defaultInstallments = 6;
-            const totalParcelado = calcularTotalParcelado(valor, defaultInstallments);
-
-            simulation = {
-                valorOriginal: valor.toFixed(2),
-                parcelas: 1,
-                valorParcela: totalPago.toFixed(2),
-                comecoPagamento: `Daqui a ${diasDelay} dias`,
-                taxa: taxaString,
-                valorTotalPago: totalPago.toFixed(2),
-                comparison: {
-                    tipo: `Pix Parcelado (em ${defaultInstallments}x)`,
-                    valorTotal: totalParcelado.toFixed(2),
-                    // Texto customizado do usuário
-                    detalhe: "Não usa limite do cartão e começa a pagar daqui a 45 dias."
-                }
-            };
-            recommendation = "Pix Paga Depois";
-            detail = `Respira fundo e paga mais pra frente, com o limite do cartão. O will segura essa.`;
-        }
-
-        result = { recommendation, detail, ...simulation };
-        displayResult();
-        goToStep('step-result');
-    };
-
-    // --- Funções de Navegação e Display ---
-
-    const goToStep = (stepId) => {
-        document.querySelectorAll('.step-page').forEach(page => {
-            page.classList.remove('active');
-        });
-        $(`#${stepId}`).classList.add('active');
-    };
-
-    const displayResult = () => {
-        if (!result) return;
-        
-        $('#li-valor-original').style.display = (flow === 'vista' ? 'none' : 'flex');
-        $('#li-valor-total-pago').style.display = (flow === 'vista' ? 'none' : 'flex');
-
-        $('#result-title').innerHTML = `🎯 Pix ideal pra você: <strong>${result.recommendation}</strong>`;
-        $('#result-detail').innerText = result.detail;
-        $('#result-valor-original').innerText = `R$ ${result.valorOriginal}`;
-        $('#result-parcelas').innerText = result.parcelas;
-        $('#result-valor-parcela').innerText = `R$ ${result.valorParcela}`;
-        $('#result-comeco-pagamento').innerText = result.comecoPagamento;
-        $('#result-taxa').innerText = result.taxa;
-        $('#result-valor-total-pago').innerText = `R$ ${result.valorTotalPago}`;
-        
-        // Preenche o comparativo (AGORA COM O CAMPO 'detalhe')
-        const comparisonBox = $('#result-comparison-box');
-        const comparisonText = $('#comparison-text');
-        
-        if (result.comparison) {
-            let compText = `No <strong>${result.comparison.tipo}</strong>, o valor total seria <strong>R$ ${result.comparison.valorTotal}</strong>.`;
-            
-            // Adiciona o novo texto de detalhe se ele existir
-            if (result.comparison.detalhe) {
-                compText += `<small>${result.comparison.detalhe}</small>`;
-            }
-            
-            comparisonText.innerHTML = compText;
-            comparisonBox.style.display = 'block';
-        } else {
-            comparisonBox.style.display = 'none';
-        }
-    };
-    
-    const restart = () => {
-        flow = "";
-        amount = "";
-        installments = 6;
-        faturaDelay = "30";
-        result = null;
-        
-        $('#input-amount').value = "";
-        $('#input-installments').value = "6";
-        $('#btn-step-1').disabled = true;
-        
-        goToStep('step-1');
-    };
-
-    // --- Event Listeners ---
-
-    // Etapa 1
-    $('#input-amount').addEventListener('input', (e) => {
-        amount = e.target.value;
-        $('#btn-step-1').disabled = !amount || parseFloat(amount) <= 0;
-    });
-    $('#btn-step-1').addEventListener('click', () => goToStep('step-2'));
-
-    // Etapa 2
-    $('#btn-flow-vista').addEventListener('click', () => {
-        flow = "vista";
-        simulate();
-    });
-    $('#btn-step-3').addEventListener('click', () => goToStep('step-3'));
-
-    // Etapa 3
-    $('#btn-goto-step-4').addEventListener('click', () => goToStep('step-4'));
-    $('#btn-flow-credito').addEventListener('click', () => {
-        flow = "credito";
-        simulate();
-    });
-    $('#btn-goto-step-5').addEventListener('click', () => goToStep('step-5'));
-
-    // Etapa 4
-    $('#input-installments').addEventListener('change', (e) => {
-        installments = parseInt(e.target.value) || 6;
-    });
-    $('#btn-flow-parcelado').addEventListener('click', () => {
-        flow = "parcelado";
-        simulate();
-    });
-
-    // Etapa 5
-    $('#btn-flow-paga-depois-30').addEventListener('click', () => {
-        flow = "paga-depois";
-        faturaDelay = "30";
-        simulate();
-    });
-    $('#btn-flow-paga-depois-60').addEventListener('click', () => {
-        flow = "paga-depois";
-        faturaDelay = "60";
-        simulate();
-    });
-    
-    // Resultado
-    $('#btn-restart').addEventListener('click', restart);
-
-    // Inicia o simulador
-    goToStep('step-1');
-});
+.result-comparison {
+    display: none; /* Escondido por padrão */
+    background-color: var(--will-gray-light);
+    border-radius: 8px;
+    padding: 1rem;
+    margin-top: 0; /* Remove espaço extra */
+    text-align: center;
+}
+.result-comparison p {
+    margin: 0;
+    font-size: 0.95rem;
+    line-height: 1.5;
+}
+.result-comparison p small {
+    display: block;
+    font-weight: 400;
+    color: var(--will-gray-dark);
+    font-size: 0.9em;
+    margin-top: 4px;
+}
