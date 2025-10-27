@@ -13,7 +13,6 @@
 
 /* --- Estilos Globais --- */
 body {
-    /* Emula Will Sans (funcional) */
     font-family: 'Inter', sans-serif;
     background-color: var(--will-gray-light);
     color: var(--will-gray-dark);
@@ -25,41 +24,40 @@ body {
     box-sizing: border-box;
 }
 
-/* --- Card Principal (Tradução do <Card>) --- */
+/* --- Card Principal --- */
 .simulator-card {
     background-color: var(--will-white);
-    border-radius: 12px; /* "Levemente arredondados" */
+    border-radius: 12px;
     box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
     width: 100%;
-    max-width: 500px; /* Ajustado para melhor visualização */
+    max-width: 500px;
     padding: 1.5rem;
     overflow: hidden;
 }
 
-/* --- Conteúdo da Etapa (Tradução do <CardContent>) --- */
+/* --- Conteúdo da Etapa --- */
 .step-content {
     display: flex;
     flex-direction: column;
-    gap: 1rem; /* Espaçamento entre elementos */
+    gap: 1rem;
     text-align: left;
 }
 
 /* --- Navegação das Etapas --- */
 .step-page {
-    display: none; /* Esconde todas as etapas */
+    display: none;
     animation: fadeIn 0.4s ease-in-out;
 }
 .step-page.active {
-    display: block; /* Mostra só a etapa ativa */
+    display: block;
 }
 @keyframes fadeIn {
     from { opacity: 0; transform: translateY(10px); }
     to { opacity: 1; transform: translateY(0); }
 }
 
-/* --- Tipografia (Baseado no Brandbook) --- */
+/* --- Tipografia --- */
 h2 {
-    /* Emula Will Slab/Display (expressiva, confiável) */
     font-family: 'Roboto Slab', serif;
     color: var(--will-black);
     font-size: 1.5rem;
@@ -75,7 +73,7 @@ p {
     text-align: center;
 }
 
-/* --- Elementos de Formulário (Label, Input) --- */
+/* --- Elementos de Formulário --- */
 .will-label {
     font-family: 'Roboto Slab', serif;
     font-size: 1.1rem;
@@ -88,7 +86,7 @@ p {
     font-weight: 600;
     padding: 12px;
     border: 2px solid var(--will-gray-medium);
-    border-radius: 8px; /* "Levemente arredondados" */
+    border-radius: 8px;
     box-sizing: border-box;
     width: 100%;
     transition: border-color 0.3s, box-shadow 0.3s;
@@ -99,7 +97,7 @@ p {
     outline: none;
 }
 
-/* --- Botões (Tradução do <Button>) --- */
+/* --- Botões --- */
 .will-button {
     font-family: 'Inter', sans-serif;
     font-size: 1rem;
@@ -115,7 +113,7 @@ p {
     box-sizing: border-box;
 }
 .will-button:hover {
-    background-color: #e6c300; /* Amarelo um pouco mais escuro */
+    background-color: #e6c300;
     border-color: #e6c300;
     transform: translateY(-2px);
 }
@@ -126,8 +124,6 @@ p {
     cursor: not-allowed;
     transform: none;
 }
-
-/* Botão Secundário (opções) */
 .will-button.secondary {
     background-color: var(--will-white);
     color: var(--will-black);
@@ -138,8 +134,6 @@ p {
     border-color: var(--will-yellow);
     transform: translateY(-2px);
 }
-
-/* Empilhamento de botões */
 .button-stack {
     gap: 0.75rem;
 }
@@ -150,18 +144,40 @@ p {
     padding: 0;
     margin: 0.5rem 0;
     border-top: 2px solid var(--will-gray-light);
-    border-bottom: 2px solid var(--will-gray-light);
 }
 .result-list li {
     font-size: 1rem;
     padding: 0.75rem 0.25rem;
     display: flex;
     justify-content: space-between;
-}
-.result-list li + li {
-    border-top: 1px dashed var(--will-gray-medium);
+    border-bottom: 1px dashed var(--will-gray-medium);
 }
 .result-list li strong {
     font-weight: 600;
     color: var(--will-black);
+}
+
+/* NOVO ESTILO */
+.result-list li.total-pago-item {
+    font-size: 1.1rem;
+    font-weight: 700;
+    border-bottom: 2px solid var(--will-gray-light);
+}
+.result-list li.total-pago-item span {
+    color: var(--will-black);
+}
+
+/* NOVO ESTILO */
+.result-comparison {
+    display: none; /* Escondido por padrão */
+    background-color: var(--will-gray-light);
+    border-radius: 8px;
+    padding: 1rem;
+    margin-top: 0; /* Remove espaço extra */
+    text-align: center;
+}
+.result-comparison p {
+    margin: 0;
+    font-size: 0.95rem;
+    line-height: 1.5;
 }
